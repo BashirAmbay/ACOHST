@@ -35,6 +35,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // API Routes
 app.use('/api', apiRoutes);
 
+// Root Route — API info
+app.get('/', (req, res) => {
+  res.json({
+    name: 'ACOHST Backend API',
+    institution: 'Al-Madinatu College of Health Science and Technology, Kore',
+    version: '1.0.0',
+    status: 'online',
+    docs: '/api/health',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.json({
