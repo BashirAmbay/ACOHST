@@ -1,0 +1,29 @@
+{
+  "name": "acohst-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Al-Madinatu College of Health Science and Technology, Kore (ACOHST)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node src/database/seed.js"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "escape-html": "^1.0.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
+    "zod": "^3.24.2"
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true
+  }
+}
