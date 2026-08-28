@@ -1,11 +1,12 @@
 import React from 'react';
 import { Shield, Target, Eye, Award, CheckCircle2, Heart, BookOpen, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Image3 from '../../../image/image 3.jpeg';
 
 export default function About() {
   return (
     <div className="space-y-16 py-12">
-      
+
       {/* Header Banner */}
       <section className="bg-gradient-to-r from-acohst-900 via-acohst-800 to-medical-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
@@ -38,10 +39,10 @@ export default function About() {
 
           <div className="lg:col-span-6">
             <div className="rounded-3xl overflow-hidden shadow-xl border-4 border-white">
-              <img 
-                src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80&w=600" 
+              <img
+                src={Image3}
                 alt="ACOHST Kore Campus"
-                className="w-full h-80 object-cover"
+                className="w-full h-80 object-contain"
               />
             </div>
           </div>
@@ -52,7 +53,7 @@ export default function About() {
       <section className="bg-slate-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
+
             {/* Vision Card */}
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 space-y-4">
               <div className="w-12 h-12 bg-emerald-100 text-acohst-700 rounded-2xl flex items-center justify-center">
