@@ -36,7 +36,7 @@ export default function Register() {
 
   return (
     <div
-      className="min-h-screen relative flex flex-col justify-center items-center p-4 py-12 bg-cover bg-contain bg-repeat"
+      className="min-h-screen relative flex flex-col justify-center items-center p-4 py-12 bg-contain bg-center bg-repeat"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
       {/* Dark overlay for contrast and legibility */}
