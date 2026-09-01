@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Lock, Mail, ArrowRight, UserCheck, KeyRound } from 'lucide-react';
+import { Lock, Mail, ArrowRight, UserCheck, KeyRound } from 'lucide-react';
+import logoImg from '../../../image/Logo.png';
+import bgImage from '../../../image/image 3.jpeg';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
 
@@ -18,7 +20,7 @@ export default function Login() {
     try {
       const data = await login(email, password);
       showSuccess(`Welcome back, ${data.user.first_name}!`);
-      
+
       const role = data.user.role;
       if (['Super Admin', 'Administrator', 'Admission Officer', 'Academic Officer', 'Finance Officer', 'Content Manager'].includes(role)) {
         navigate('/admin');
@@ -40,31 +42,40 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center p-4 py-12">
-      
-      <div className="max-w-md w-full space-y-6">
-        
+    <div
+      className="min-h-screen relative flex flex-col justify-center items-center p-4 py-12 bg-cover bg-contain bg-repeat"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {/* Dark overlay for contrast and legibility */}
+      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]"></div>
+
+      <div className="relative z-10 max-w-md w-full space-y-6">
+
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-acohst-600 to-medical-600 flex items-center justify-center font-bold text-white shadow-lg">
-              <Shield className="w-7 h-7 text-emerald-200" />
-            </div>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Link to="/" className="inline-flex flex-col items-center space-y-3 group">
+            <img
+              src={logoImg}
+              alt="ACOHST Logo"
+              className="h-20 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-md"
+            />
             <span className="font-black text-2xl text-white tracking-tight">ACOHST <span className="text-emerald-400">PORTAL</span></span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-200">Sign in to your Institutional Account</h2>
-          <p className="text-xs text-slate-400">Access your applicant dashboard, student records, or staff desk</p>
+          <div>
+            <h2 className="text-xl font-bold text-slate-200">Sign in to your Institutional Account</h2>
+            <p className="text-xs text-slate-400">Access your applicant dashboard, student records, or staff desk</p>
+          </div>
         </div>
 
         {/* Login Card */}
         <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
           <form onSubmit={handleLogin} className="space-y-4">
-            
+
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-                <input 
+                <input
                   type="email"
                   required
                   value={email}
@@ -79,7 +90,7 @@ export default function Login() {
               <label className="block text-xs font-semibold text-slate-300 mb-1">Password</label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-                <input 
+                <input
                   type="password"
                   required
                   value={password}
@@ -106,26 +117,26 @@ export default function Login() {
               ⚡ Quick Demo Login Switcher
             </span>
             <div className="grid grid-cols-2 gap-2 text-[10px]">
-              <button 
-                onClick={() => handleQuickDemo('admin@acohst.edu.ng')} 
+              <button
+                onClick={() => handleQuickDemo('admin@acohst.edu.ng')}
                 className="bg-slate-900 hover:bg-emerald-950 text-slate-300 hover:text-emerald-300 p-2 rounded-lg border border-slate-800 text-left truncate"
               >
                 👑 Super Admin
               </button>
-              <button 
-                onClick={() => handleQuickDemo('admissions@acohst.edu.ng')} 
+              <button
+                onClick={() => handleQuickDemo('admissions@acohst.edu.ng')}
                 className="bg-slate-900 hover:bg-emerald-950 text-slate-300 hover:text-emerald-300 p-2 rounded-lg border border-slate-800 text-left truncate"
               >
                 📋 Admission Officer
               </button>
-              <button 
-                onClick={() => handleQuickDemo('student@acohst.edu.ng')} 
+              <button
+                onClick={() => handleQuickDemo('student@acohst.edu.ng')}
                 className="bg-slate-900 hover:bg-emerald-950 text-slate-300 hover:text-emerald-300 p-2 rounded-lg border border-slate-800 text-left truncate"
               >
                 🎓 Enrolled Student
               </button>
-              <button 
-                onClick={() => handleQuickDemo('applicant@acohst.edu.ng')} 
+              <button
+                onClick={() => handleQuickDemo('applicant@acohst.edu.ng')}
                 className="bg-slate-900 hover:bg-emerald-950 text-slate-300 hover:text-emerald-300 p-2 rounded-lg border border-slate-800 text-left truncate"
               >
                 📝 Prospective Applicant
