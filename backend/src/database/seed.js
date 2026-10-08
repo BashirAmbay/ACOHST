@@ -168,7 +168,7 @@ function seedDatabase() {
     'The Governing Council of ACOHST has approved the procurement of modern diagnostic instruments to enhance practical clinical exposure for students.',
     'In line with ACOHST commitment to providing world-class health education, the Governing Board has delivered a new suite of modern laboratory diagnostic tools to the Medical Laboratory Science and Pharmacy departments.\n\nSpeaking during the commissioning, the Provost emphasized that practical competency remains the cornerstone of health science training at Kore.',
     'Academics',
-    'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=600',
+    '/image/image 11.jpg',
     'ACOHST Media Unit'
   );
 

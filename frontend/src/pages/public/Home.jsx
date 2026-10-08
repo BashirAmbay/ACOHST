@@ -3,19 +3,119 @@ import { Link } from 'react-router-dom';
 import Image2 from '../../../image/image 2.png';
 import Image1 from '../../../image/image 1.jpg';
 import Image3 from '../../../image/image 3.jpeg';
+import Image4 from '../../../image/image 4.jpg';
+import Image8 from '../../../image/image 8.jpg';
+import Image10 from '../../../image/image 10.jpg';
+import Image11 from '../../../image/image 11.jpg';
 import {
   Shield, GraduationCap, Users, Award, BookOpen, ChevronRight,
   ArrowRight, CheckCircle2, Stethoscope, Microscope, Pill, FileText,
   Sparkles, Calendar, Newspaper, Image as GalleryIcon, Building2, HelpCircle, PhoneCall
 } from 'lucide-react';
 import api from '../../services/api';
+import { STATIC_FACILITIES } from './Facilities';
+import { STATIC_NEWS } from './News';
+
+export const STATIC_PROGRAMMES = [
+  {
+    id: 1,
+    name: 'Community Health Extension Workers (CHEW)',
+    code: 'CHEW',
+    degree_type: 'Diploma',
+    duration_years: 3,
+    fee_amount: 120000,
+    requirement_summary: '5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.',
+    description: 'Comprehensive 3-year professional diploma training students for clinical primary health care delivery, preventive medicine, maternal-child healthcare, and emergency first aid.'
+  },
+  {
+    id: 2,
+    name: 'Pharmacy Technician (PT)',
+    code: 'PT',
+    degree_type: 'Diploma',
+    duration_years: 3,
+    fee_amount: 140000,
+    requirement_summary: '5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.',
+    description: '3-year professional diploma programme focusing on drug formulation, pharmacology basics, inventory management, dispensing ethics, and prescription dispensing in hospitals and pharmacies.'
+  },
+  {
+    id: 3,
+    name: 'Medical Laboratory Technician (MLT)',
+    code: 'MLT',
+    degree_type: 'Diploma',
+    duration_years: 3,
+    fee_amount: 120000,
+    requirement_summary: '5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Chemistry, Biology, and Physics.',
+    description: '3-year professional diploma training medical laboratory technicians in diagnostic testing, blood transfusion services, clinical biochemistry, and microscopy.'
+  },
+  {
+    id: 4,
+    name: 'Public Health Technician (PHT)',
+    code: 'PHT',
+    degree_type: 'Diploma',
+    duration_years: 3,
+    fee_amount: 110000,
+    requirement_summary: '5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.',
+    description: '3-year professional diploma equipping students with essential skills in epidemiology, disease surveillance, community sanitation, environmental hygiene, and public health education.'
+  }
+];
+
+export const STATIC_EVENTS = [
+  {
+    id: 1,
+    title: '2026/2027 Matriculation & Oath-Taking Ceremony',
+    slug: '2026-2027-matriculation-ceremony',
+    location: 'ACOHST Main Auditorium, Kore',
+    event_date: '2026-10-15',
+    event_time: '10:00 AM',
+    description: 'Official matriculation ceremony and professional oath-taking for newly admitted students across all health science schools.',
+    category: 'Ceremony'
+  },
+  {
+    id: 2,
+    title: 'Annual Community Health Outreach & Free Medical Screening',
+    slug: 'annual-community-health-outreach-2026',
+    location: 'Kore Primary Healthcare Center & Surrounding Villages',
+    event_date: '2026-11-20',
+    event_time: '08:30 AM',
+    description: 'A joint community health drive organized by the School of Community Health Sciences offering free blood pressure checks, diabetes screening, health education, and maternal care advice.',
+    category: 'Community Outreach'
+  }
+];
+
+export const STATIC_FAQS = [
+  {
+    id: 1,
+    question: 'What courses are offered at ACOHST?',
+    answer: 'ACOHST offers 4 accredited programmes: 1) Community Health Extension Workers (CHEW), 2) Pharmacy Technician (PT), 3) Medical Laboratory Technician (MLT), and 4) Public Health Technician (PHT).'
+  },
+  {
+    id: 2,
+    question: 'How do I apply for the 2026/2027 Admission?',
+    answer: 'Anyone interested in obtaining the Admission Form for the 2026/2027 Academic session should visit Al-Madinatu College of Health Science and Technology Kore Campus. Admission forms are obtained directly from the Admissions Office on campus.'
+  },
+  {
+    id: 3,
+    question: 'What are the general admission entry requirements?',
+    answer: 'General Entry Requirements: 5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.'
+  },
+  {
+    id: 4,
+    question: 'Are ACOHST health programmes fully accredited?',
+    answer: 'Yes, all programmes offered at Al-Madinatu College of Health Science and Technology, Kore, are recognized and regulated by respective national professional boards and councils.'
+  },
+  {
+    id: 5,
+    question: 'Is hostel accommodation available on campus?',
+    answer: 'Yes, ACOHST provides comfortable, secure, and well-equipped male and female student hostels with 24/7 security and electricity within the college premises.'
+  }
+];
 
 export default function Home() {
-  const [news, setNews] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [facilities, setFacilities] = useState([]);
-  const [programmes, setProgrammes] = useState([]);
-  const [faqs, setFaqs] = useState([]);
+  const [news, setNews] = useState(STATIC_NEWS.slice(0, 3));
+  const [events, setEvents] = useState(STATIC_EVENTS);
+  const [facilities, setFacilities] = useState(STATIC_FACILITIES.slice(0, 3));
+  const [programmes, setProgrammes] = useState(STATIC_PROGRAMMES);
+  const [faqs, setFaqs] = useState(STATIC_FAQS);
   const [activeFaq, setActiveFaq] = useState(null);
 
   useEffect(() => {
@@ -24,20 +124,53 @@ export default function Home() {
 
   const fetchHomepageData = async () => {
     try {
-      const [newsRes, eventsRes, facRes, progRes, faqRes] = await Promise.all([
+      const [newsRes, eventsRes, facRes, progRes, faqRes] = await Promise.allSettled([
         api.get('/cms/news?limit=3'),
         api.get('/cms/events?limit=2'),
         api.get('/cms/facilities'),
         api.get('/academics/programmes'),
         api.get('/cms/faqs')
       ]);
-      if (newsRes.data.success) setNews(newsRes.data.news);
-      if (eventsRes.data.success) setEvents(eventsRes.data.events);
-      if (facRes.data.success) setFacilities(facRes.data.facilities);
-      if (progRes.data.success) setProgrammes(progRes.data.programmes);
-      if (faqRes.data.success) setFaqs(faqRes.data.faqs);
+
+      if (newsRes.status === 'fulfilled' && newsRes.value?.data?.success && Array.isArray(newsRes.value.data.news) && newsRes.value.data.news.length > 0) {
+        // Replace any external image URLs (e.g. Unsplash) with proper local ACOHST images
+        const LOCAL_NEWS_IMAGES = [Image1, Image4, Image10, Image8];
+        const sanitizedNews = newsRes.value.data.news.map((item, idx) => {
+          if (
+            item.title?.toLowerCase().includes('diagnostic equipment') ||
+            item.slug?.includes('diagnostic-equipment')
+          ) {
+            return { ...item, featured_image: Image11 };
+          }
+          const isExternal = item.featured_image && (item.featured_image.startsWith('http://') || item.featured_image.startsWith('https://'));
+          return isExternal
+            ? { ...item, featured_image: LOCAL_NEWS_IMAGES[idx % LOCAL_NEWS_IMAGES.length] }
+            : item;
+        });
+        setNews(sanitizedNews);
+      }
+      if (eventsRes.status === 'fulfilled' && eventsRes.value?.data?.success && Array.isArray(eventsRes.value.data.events) && eventsRes.value.data.events.length > 0) {
+        setEvents(eventsRes.value.data.events);
+      }
+      if (facRes.status === 'fulfilled' && facRes.value?.data?.success && Array.isArray(facRes.value.data.facilities) && facRes.value.data.facilities.length > 0) {
+        // Replace any external image URLs with proper local ACOHST facility images
+        const LOCAL_FAC_IMAGES = [Image10, Image8, Image9];
+        const sanitizedFacilities = facRes.value.data.facilities.map((fac, idx) => {
+          const isExternal = fac.image_url && (fac.image_url.startsWith('http://') || fac.image_url.startsWith('https://'));
+          return isExternal
+            ? { ...fac, image_url: LOCAL_FAC_IMAGES[idx % LOCAL_FAC_IMAGES.length] }
+            : fac;
+        });
+        setFacilities(sanitizedFacilities);
+      }
+      if (progRes.status === 'fulfilled' && progRes.value?.data?.success && Array.isArray(progRes.value.data.programmes) && progRes.value.data.programmes.length > 0) {
+        setProgrammes(progRes.value.data.programmes);
+      }
+      if (faqRes.status === 'fulfilled' && faqRes.value?.data?.success && Array.isArray(faqRes.value.data.faqs) && faqRes.value.data.faqs.length > 0) {
+        setFaqs(faqRes.value.data.faqs);
+      }
     } catch (err) {
-      console.warn('Failed to load homepage resources:', err.message);
+      console.warn('Note: displaying pre-configured homepage content:', err.message);
     }
   };
 
@@ -291,7 +424,7 @@ export default function Home() {
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase font-bold block">Session Fee</span>
-                  <span className="font-extrabold text-acohst-800 text-sm">₦{prog.fee_amount.toLocaleString()}</span>
+                  <span className="font-extrabold text-acohst-800 text-sm">₦{Number(prog.fee_amount || 0).toLocaleString()}</span>
                 </div>
 
                 <Link
@@ -330,7 +463,15 @@ export default function Home() {
             {facilities.slice(0, 3).map((fac) => (
               <div key={fac.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200">
                 <div className="h-48 overflow-hidden relative">
-                  <img src={fac.image_url} alt={fac.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  <img
+                    src={fac.image_url}
+                    alt={fac.name}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = Image1;
+                    }}
+                  />
                   <span className="absolute top-3 right-3 bg-slate-950/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-md backdrop-blur">
                     {fac.category}
                   </span>
@@ -366,24 +507,39 @@ export default function Home() {
             </div>
 
             <div className="space-y-6">
-              {news.map((item) => (
-                <div key={item.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-5 items-center">
-                  <div className="w-full sm:w-36 h-28 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
-                    <img src={item.featured_image} alt={item.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center space-x-2 text-[11px] text-slate-400">
-                      <span className="bg-emerald-50 text-acohst-700 font-bold px-2 py-0.5 rounded">{item.category}</span>
-                      <span>•</span>
-                      <span>{new Date(item.published_at).toLocaleDateString()}</span>
+              {news.map((item) => {
+                const isDiagnosticEquip =
+                  item.title?.toLowerCase().includes('diagnostic equipment') ||
+                  item.slug?.includes('diagnostic-equipment');
+                const displayImage = isDiagnosticEquip ? Image11 : (item.featured_image || Image1);
+
+                return (
+                  <div key={item.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-5 items-center">
+                    <div className="w-full sm:w-36 h-28 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
+                      <img
+                        src={displayImage}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = isDiagnosticEquip ? Image11 : Image1;
+                        }}
+                      />
                     </div>
-                    <h4 className="font-bold text-slate-900 text-base leading-snug hover:text-acohst-700">
-                      <Link to={`/news/${item.slug}`}>{item.title}</Link>
-                    </h4>
-                    <p className="text-xs text-slate-600 line-clamp-2">{item.summary}</p>
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center space-x-2 text-[11px] text-slate-400">
+                        <span className="bg-emerald-50 text-acohst-700 font-bold px-2 py-0.5 rounded">{item.category}</span>
+                        <span>•</span>
+                        <span>{item.published_at ? new Date(item.published_at).toLocaleDateString() : 'Recent'}</span>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base leading-snug hover:text-acohst-700">
+                        <Link to={`/news/${item.slug}`}>{item.title}</Link>
+                      </h4>
+                      <p className="text-xs text-slate-600 line-clamp-2">{item.summary}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -400,8 +556,8 @@ export default function Home() {
               {events.map((ev) => (
                 <div key={ev.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex space-x-4 items-start">
                   <div className="w-14 h-16 bg-acohst-700 text-white rounded-xl flex flex-col items-center justify-center text-center flex-shrink-0 shadow">
-                    <span className="text-xs uppercase font-bold opacity-80">{new Date(ev.event_date).toLocaleString('default', { month: 'short' })}</span>
-                    <span className="text-xl font-black">{new Date(ev.event_date).getDate()}</span>
+                    <span className="text-xs uppercase font-bold opacity-80">{ev.event_date ? new Date(ev.event_date).toLocaleString('default', { month: 'short' }) : 'OCT'}</span>
+                    <span className="text-xl font-black">{ev.event_date ? new Date(ev.event_date).getDate() : '15'}</span>
                   </div>
                   <div className="space-y-1 flex-1">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-medical-700">{ev.category}</span>
