@@ -439,7 +439,7 @@ export default function ApplicationForm() {
               >
                 {programmes.map(p => (
                   <option key={p.id} value={p.id}>
-                    {p.name} ({p.degree_type} - ₦{p.fee_amount.toLocaleString()})
+                    {p.name} ({p.degree_type} - Session Fee: ₦{p.fee_amount.toLocaleString()} + Dept. fee ₦10,000 = Total: ₦{(p.fee_amount + 10000).toLocaleString()})
                   </option>
                 ))}
               </select>

@@ -104,14 +104,14 @@ const STATIC_COURSES = [
     name: 'Public Health Technician (PHT)',
     code: 'PHT',
     degree_type: 'Diploma',
-    duration_years: 3,
+    duration_years: 2,
     fee_amount: 110000,
     regulatory_board: 'Recognized National & West African Health Examination Boards (WAHEB)',
     school_name: 'School of Public Health Sciences',
     icon: ShieldCheck,
     badgeColor: 'from-emerald-700 to-green-800',
     description:
-      'Essential 3-year professional diploma equipping students with modern competencies in public epidemiology, infectious disease surveillance, environmental sanitation, hygiene promotion, and health policy management.',
+      'Essential 2-year professional diploma equipping students with modern competencies in public epidemiology, infectious disease surveillance, environmental sanitation, hygiene promotion, and health policy management.',
     requirements:
       '5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.',
     specific_requirement:
@@ -441,14 +441,18 @@ export default function Academics() {
                 </div>
 
                 {/* Card Bottom CTA & Fee */}
-                <div className="pt-5 border-t border-slate-100 flex items-center justify-between">
-                  <div>
+                <div className="pt-5 border-t border-slate-100 flex items-end justify-between gap-3">
+                  <div className="space-y-0.5">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block tracking-wider">
-                      Academic Session Tuition
+                      Session Fee
                     </span>
-                    <span className="font-black text-acohst-900 text-lg">
-                      ₦{course.fee_amount?.toLocaleString?.() || '120,000'}
-                    </span>
+                    <div className="text-xs text-slate-700 font-semibold leading-tight">
+                      <span>₦{Number(course.fee_amount || 120000).toLocaleString()}</span>
+                      <span className="text-[11px] text-slate-500 font-normal"> + Dept. fee ₦10,000</span>
+                    </div>
+                    <div className="text-sm font-black text-acohst-900">
+                      Total: ₦{(Number(course.fee_amount || 120000) + 10000).toLocaleString()}
+                    </div>
                   </div>
 
                   <Link

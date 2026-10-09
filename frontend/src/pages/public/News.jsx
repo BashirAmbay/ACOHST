@@ -18,10 +18,10 @@ export const STATIC_NEWS = [
     content: `Al-Madinatu College of Health Science and Technology Kore (ACOHST) announces that Admission Forms for the 2026/2027 Academic Session are officially available.
 
 Approved & Accredited Courses Offered:
-1. Community Health Extension Workers (CHEW) - Diploma (Session Fee: ₦120,000)
-2. Pharmacy Technician (PT) - Diploma (Session Fee: ₦140,000)
-3. Medical Laboratory Technician (MLT) - Diploma (Session Fee: ₦120,000)
-4. Public Health Technician (PHT) - Diploma (Session Fee: ₦110,000)
+1. Community Health Extension Workers (CHEW) - Diploma (Session Fee: ₦120,000 + Dept. fee ₦10,000 = Total: ₦130,000)
+2. Pharmacy Technician (PT) - Diploma (Session Fee: ₦140,000 + Dept. fee ₦10,000 = Total: ₦150,000)
+3. Medical Laboratory Technician (MLT) - Diploma (Session Fee: ₦120,000 + Dept. fee ₦10,000 = Total: ₦130,000)
+4. Public Health Technician (PHT) - Diploma (Session Fee: ₦110,000 + Dept. fee ₦10,000 = Total: ₦120,000)
 
 General Entry Requirements:
 5 O-Level credits (WAEC, NECO, or GCE) in English Language, Mathematics, Biology, Chemistry, and Physics.

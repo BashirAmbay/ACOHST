@@ -42,7 +42,7 @@ export default function Admissions() {
       name: 'Public Health Technician (PHT)',
       code: 'PHT',
       award: 'Professional Diploma',
-      duration: '3 Years',
+      duration: '2 Years',
       board: 'National & West African Health Examination Boards (WAHEB)'
     }
   ];

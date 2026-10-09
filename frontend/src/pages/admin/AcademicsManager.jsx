@@ -146,7 +146,10 @@ export default function AcademicsManager() {
             <p className="text-xs text-slate-400 line-clamp-2">{prog.description}</p>
             <div className="pt-2 border-t border-slate-900 flex justify-between items-center text-xs">
               <span className="text-slate-500">Session Fee:</span>
-              <span className="font-bold text-amber-300">₦{prog.fee_amount.toLocaleString()}</span>
+              <div className="text-right">
+                <span className="font-bold text-amber-300">₦{prog.fee_amount.toLocaleString()} + Dept. fee ₦10,000</span>
+                <span className="block text-[11px] text-emerald-400 font-extrabold">Total: ₦{(prog.fee_amount + 10000).toLocaleString()}</span>
+              </div>
             </div>
           </div>
         ))}
