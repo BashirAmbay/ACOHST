@@ -24,6 +24,7 @@ import Contact from './pages/public/Contact';
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ResetPassword from './pages/auth/ResetPassword';
 
 // Applicant Pages
 import ApplicantDashboard from './pages/applicant/ApplicantDashboard';
@@ -81,6 +82,8 @@ export default function App() {
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<Login defaultForgot={true} />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Online Applicant Portal */}
             <Route 

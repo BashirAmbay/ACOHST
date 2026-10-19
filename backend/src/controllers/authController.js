@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const db = require('../database/db');
 const { generateToken, sanitizeUser } = require('../utils/helpers');
-const { sendVerificationEmail } = require('../services/emailService');
+const { sendVerificationEmail, sendAccountCreatedEmail, sendResetPasswordEmail } = require('../services/emailService');
 
 async function register(req, res) {
   try {
@@ -28,18 +28,19 @@ async function register(req, res) {
 
     const newUser = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
 
-    // Send verification email in background
-    sendVerificationEmail(email, verificationToken, `${first_name} ${last_name}`);
-
     // If applicant role, initialize applicant draft record
+    let appNum = null;
     if (userRole === 'Applicant') {
       const activeSession = db.prepare('SELECT id FROM academic_sessions WHERE is_current = 1').get() || { id: 1 };
-      const appNum = `ACOHST/${new Date().getFullYear()}/APP/${String(result.lastInsertRowid).padStart(4, '0')}`;
+      appNum = `ACOHST/${new Date().getFullYear()}/APP/${String(result.lastInsertRowid).padStart(4, '0')}`;
       db.prepare(`
         INSERT OR IGNORE INTO applicants (user_id, application_number, academic_session_id, first_name, last_name, email, phone, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft')
       `).run(newUser.id, appNum, activeSession.id, first_name, last_name, email, phone || '');
     }
+
+    // Send account creation confirmation email in background
+    sendAccountCreatedEmail(email, `${first_name} ${last_name}`, appNum);
 
     const token = generateToken(newUser);
 
@@ -133,8 +134,98 @@ async function getCurrentProfile(req, res) {
   }
 }
 
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Please provide your registered email address.' });
+    }
+
+    const user = db.prepare('SELECT id, email, first_name FROM users WHERE email = ?').get(email);
+    if (!user) {
+      // For security, do not expose which emails exist, but provide reassuring message
+      return res.json({
+        success: true,
+        message: 'If an account exists with this email address, a password reset link has been sent.'
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetExpires = new Date(Date.now() + 3600000).toISOString(); // 1 hour validity
+
+    db.prepare('UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?')
+      .run(resetToken, resetExpires, user.id);
+
+    let origin = 'http://localhost:3000';
+    if (req.headers.origin) {
+      origin = req.headers.origin;
+    } else if (req.headers.referer) {
+      try {
+        origin = new URL(req.headers.referer).origin;
+      } catch (e) {
+        origin = 'http://localhost:3000';
+      }
+    }
+
+    const frontendUrl = process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL
+      ? process.env.FRONTEND_URL
+      : origin;
+
+    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
+
+    sendResetPasswordEmail(user.email, resetUrl, user.first_name);
+
+    return res.json({
+      success: true,
+      message: 'Password reset link sent! Please check your email inbox.'
+    });
+  } catch (error) {
+    console.error('Forgot Password Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error processing password reset.' });
+  }
+}
+
+async function resetPassword(req, res) {
+  try {
+    const { email, token, password } = req.body;
+
+    if (!email || !token || !password) {
+      return res.status(400).json({ success: false, message: 'Email, token, and new password are required.' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
+    }
+
+    const user = db.prepare('SELECT id, reset_token, reset_token_expires FROM users WHERE email = ?').get(email);
+    if (!user || !user.reset_token || user.reset_token !== token) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired password reset link. Please request a new link.' });
+    }
+
+    const now = new Date();
+    const expires = new Date(user.reset_token_expires);
+    if (expires < now) {
+      return res.status(400).json({ success: false, message: 'This password reset link has expired. Please request a new link.' });
+    }
+
+    const newHash = bcrypt.hashSync(password, 10);
+    db.prepare('UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(newHash, user.id);
+
+    return res.json({
+      success: true,
+      message: 'Your password has been reset successfully! You can now sign in with your new password.'
+    });
+  } catch (error) {
+    console.error('Reset Password Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error resetting password.' });
+  }
+}
+
 module.exports = {
   register,
   login,
-  getCurrentProfile
+  getCurrentProfile,
+  forgotPassword,
+  resetPassword
 };

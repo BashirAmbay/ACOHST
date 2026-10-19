@@ -18,6 +18,8 @@ const contactController = require('../controllers/contactController');
 router.post('/auth/register', authLimiter, authController.register);
 router.post('/auth/login', authLimiter, authController.login);
 router.get('/auth/profile', authenticateToken, authController.getCurrentProfile);
+router.post('/auth/forgot-password', authLimiter, authController.forgotPassword);
+router.post('/auth/reset-password', authLimiter, authController.resetPassword);
 
 // Applicant Portal Routes
 router.get('/applicant/profile', authenticateToken, requireRole('Applicant', 'Student'), applicantController.getApplicantProfile);
