@@ -10,7 +10,7 @@ import Image11 from '../../../image/image 11.jpg';
 import {
   Shield, GraduationCap, Users, Award, BookOpen, ChevronRight,
   ArrowRight, CheckCircle2, Stethoscope, Microscope, Pill, FileText,
-  Sparkles, Calendar, Newspaper, Image as GalleryIcon, Building2, HelpCircle, PhoneCall
+  Calendar, Newspaper, Image as GalleryIcon, Building2, HelpCircle, PhoneCall
 } from 'lucide-react';
 import api from '../../services/api';
 import { STATIC_FACILITIES } from './Facilities';
@@ -197,7 +197,6 @@ export default function Home() {
             {/* Left Hero Text */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center space-x-2 bg-emerald-900/60 backdrop-blur border border-emerald-500/40 px-3.5 py-1.5 rounded-full text-xs font-semibold text-emerald-200">
-                <Sparkles className="w-4 h-4 text-amber-300" />
                 <span>Admissions Open for 2026/2027 Academic Session</span>
               </div>
 
