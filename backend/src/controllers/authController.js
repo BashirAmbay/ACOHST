@@ -167,7 +167,7 @@ async function forgotPassword(req, res) {
       }
     }
 
-    const frontendUrl = process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL
+    const frontendUrl = (process.env.NODE_ENV === 'production' || process.env.VERCEL) && process.env.FRONTEND_URL
       ? process.env.FRONTEND_URL
       : origin;
 

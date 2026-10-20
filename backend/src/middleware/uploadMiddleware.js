@@ -2,18 +2,37 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// In production (Vercel), only /tmp is writable
-const uploadDir = process.env.NODE_ENV === 'production'
-  ? '/tmp/uploads'
-  : (process.env.UPLOAD_DIR || 'uploads');
+// Detect Vercel / Serverless / Production environment
+const isServerless = Boolean(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.NODE_ENV === 'production'
+);
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// In production (Vercel), only /tmp is writable
+const uploadDir = isServerless
+  ? path.join('/tmp', 'uploads')
+  : (process.env.UPLOAD_DIR
+      ? path.resolve(process.env.UPLOAD_DIR)
+      : path.join(__dirname, '../../uploads'));
+
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Upload directory initialization notice:', err.message);
 }
 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    try {
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+    } catch (e) {}
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {

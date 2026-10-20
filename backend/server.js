@@ -25,9 +25,16 @@ try {
 app.use(securityHeaders);
 
 // Global Middleware
+const isServerless = Boolean(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.NODE_ENV === 'production'
+);
+
 // Allow frontend origin in production via FRONTEND_URL env variable
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
+  origin: isServerless
     ? (process.env.FRONTEND_URL || '*')
     : '*',
   credentials: true
@@ -40,6 +47,9 @@ app.use(morgan('dev'));
 
 // Static Uploads Directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+if (isServerless) {
+  app.use('/uploads', express.static(path.join('/tmp', 'uploads')));
+}
 
 // Rate Limiting on API endpoints to prevent DDoS, scraping, and brute force
 app.use('/api', globalApiLimiter);
