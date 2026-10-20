@@ -1,0 +1,2 @@
+# Keep backend uploads directory in git repository
+# User uploaded files inside this directory will be ignored via .gitignore
