@@ -32,14 +32,48 @@ const isServerless = Boolean(
   process.env.NODE_ENV === 'production'
 );
 
-// Allow frontend origin in production via FRONTEND_URL env variable
+// Allow frontend origins dynamically (supports production domains, Vercel deployments, and local dev)
+const configuredFrontend = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.trim() : '';
+
 const corsOptions = {
-  origin: isServerless
-    ? (process.env.FRONTEND_URL || '*')
-    : '*',
-  credentials: true
+  origin: (origin, callback) => {
+    // 1. Allow non-browser requests (e.g. mobile apps, server-to-server, curl)
+    if (!origin) return callback(null, true);
+
+    // 2. Allow local development (Vite, CRA, localhost, 127.0.0.1)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // 3. Allow Vercel preview & production deployments (*.vercel.app)
+    if (/^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // 4. Allow official institutional domain (almadinatukore.com with any subdomains)
+    if (/^https?:\/\/([a-zA-Z0-9_-]+\.)*almadinatukore\.com$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // 5. Match against FRONTEND_URL environment variable if explicitly configured
+    if (configuredFrontend) {
+      const normConfig = configuredFrontend.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      const normOrigin = origin.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      if (normOrigin === normConfig || normOrigin.endsWith('.' + normConfig)) {
+        return callback(null, true);
+      }
+    }
+
+    // 6. In serverless / production environments, reflect origin so legitimate client callers are not blocked
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
 };
+
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle all preflight requests immediately
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(inputSanitizer); // Data sanitization & prototype pollution prevention

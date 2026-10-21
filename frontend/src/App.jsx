@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './components/common/Toast';
@@ -59,11 +59,29 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
+// Dismiss the HTML preloader once React has mounted
+function PreloaderDismiss() {
+  useEffect(() => {
+    const el = document.getElementById('acohst-preloader');
+    if (!el) return;
+    // Small delay so first paint of the app is visible before fade starts
+    const timer = setTimeout(() => {
+      el.classList.add('preloader-hidden');
+      // Remove from DOM after transition completes
+      el.addEventListener('transitionend', () => el.remove(), { once: true });
+    }, 350);
+    return () => clearTimeout(timer);
+  }, []);
+  return null;
+}
+
 export default function App() {
+
   return (
     <AuthProvider>
       <ToastProvider>
         <BrowserRouter>
+          <PreloaderDismiss />
           <Routes>
             {/* Public Website Routes */}
             <Route path="/" element={<PublicLayout />}>

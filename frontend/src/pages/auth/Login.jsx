@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, UserCheck, KeyRound, Eye, EyeOff, ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
-import logoImg from '../../../image/Logo.png';
+import logoImg from '../../../image/Logo_backup.png';
 import bgImage from '../../../image/image 3.jpeg';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
@@ -44,7 +44,7 @@ export default function Login({ defaultForgot = false }) {
         navigate('/applicant');
       }
     } catch (err) {
-      showError(err.message || 'Invalid login credentials.');
+      showError(err.response?.data?.message || err.message || 'Invalid login credentials.');
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Lock, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
-import logoImg from '../../../image/Logo.png';
+import logoImg from '../../../image/Logo_backup.png';
 import bgImage from '../../../image/image 3.jpeg';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
@@ -40,7 +40,7 @@ export default function Register() {
       showSuccess('Account registered successfully! You are logged in.');
       navigate('/applicant');
     } catch (err) {
-      showError(err.message || 'Registration failed.');
+      showError(err.response?.data?.message || err.message || 'Registration failed.');
     } finally {
       setLoading(false);
     }

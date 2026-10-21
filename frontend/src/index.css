@@ -55,3 +55,80 @@
     display: none !important;
   }
 }
+
+/* =====================================================
+   ACOHST Page Preloader
+   ===================================================== */
+#acohst-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, #064e3b 0%, #047857 40%, #0284c7 100%);
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+}
+
+#acohst-preloader.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#acohst-preloader .preloader-logo {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 24px rgba(0,0,0,0.30));
+  animation: preloader-pulse 1.8s ease-in-out infinite;
+}
+
+#acohst-preloader .preloader-ring {
+  width: 64px;
+  height: 64px;
+  border: 3.5px solid rgba(255,255,255,0.18);
+  border-top-color: #34d399;
+  border-radius: 50%;
+  animation: preloader-spin 0.85s linear infinite;
+}
+
+#acohst-preloader .preloader-text {
+  color: rgba(255,255,255,0.90);
+  font-family: 'Inter', 'Outfit', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: preloader-fade 1.8s ease-in-out infinite;
+}
+
+#acohst-preloader .preloader-brand {
+  color: #ffffff;
+  font-family: 'Inter', 'Outfit', system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin-top: -0.5rem;
+}
+
+#acohst-preloader .preloader-brand span {
+  color: #34d399;
+}
+
+@keyframes preloader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes preloader-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.06); opacity: 0.88; }
+}
+
+@keyframes preloader-fade {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1; }
+}
+

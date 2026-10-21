@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Lock, ArrowRight, ArrowLeft, Eye, EyeOff, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
-import logoImg from '../../../image/Logo.png';
+import logoImg from '../../../image/Logo_backup.png';
 import bgImage from '../../../image/image 3.jpeg';
 import { useToast } from '../../components/common/Toast';
 import api from '../../services/api';

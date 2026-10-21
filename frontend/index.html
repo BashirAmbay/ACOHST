@@ -14,8 +14,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,300&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Critical inline styles for preloader (runs before Vite CSS) -->
+    <style>
+      #acohst-preloader{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;background:linear-gradient(135deg,#064e3b 0%,#047857 40%,#0284c7 100%);transition:opacity .55s ease,visibility .55s ease}
+      #acohst-preloader.preloader-hidden{opacity:0;visibility:hidden;pointer-events:none}
+      #acohst-preloader .preloader-logo{width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 6px 24px rgba(0,0,0,.3));animation:pl-pulse 1.8s ease-in-out infinite}
+      #acohst-preloader .preloader-ring{width:64px;height:64px;border:3.5px solid rgba(255,255,255,.18);border-top-color:#34d399;border-radius:50%;animation:pl-spin .85s linear infinite}
+      #acohst-preloader .preloader-text{color:rgba(255,255,255,.9);font-family:Inter,Outfit,system-ui,sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;animation:pl-fade 1.8s ease-in-out infinite}
+      #acohst-preloader .preloader-brand{color:#fff;font-family:Inter,Outfit,system-ui,sans-serif;font-size:1.35rem;font-weight:900;letter-spacing:.04em;margin-top:-.5rem}
+      #acohst-preloader .preloader-brand span{color:#34d399}
+      @keyframes pl-spin{to{transform:rotate(360deg)}}
+      @keyframes pl-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.88}}
+      @keyframes pl-fade{0%,100%{opacity:.55}50%{opacity:1}}
+    </style>
   </head>
   <body class="bg-slate-50 text-slate-800 antialiased font-sans selection:bg-acohst-600 selection:text-white">
+
+    <!-- ACOHST Preloader — renders before React JS loads -->
+    <div id="acohst-preloader" aria-label="Loading ACOHST portal" role="status">
+      <img
+        src="/image/Logo_backup.png"
+        alt="ACOHST Logo"
+        class="preloader-logo"
+      />
+      <div class="preloader-brand">ACOHST <span>KORE</span></div>
+      <div class="preloader-ring"></div>
+      <p class="preloader-text">Loading Portal&hellip;</p>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -5,15 +5,17 @@ const helmet = require('helmet');
 const securityHeaders = helmet({
   contentSecurityPolicy: false, // Let frontend assets load freely across Vite/localhost/production
   crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
   crossOriginResourcePolicy: { policy: 'cross-origin' } // Allows images & static uploads to be safely rendered
 });
 
 // 2. Global API Rate Limiter (Protects against volumetric DDoS and scraping)
 const globalApiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // Limit each IP to 500 requests per window
+  max: 1000, // Limit each IP to 1000 requests per window
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS', // Never block CORS preflight checks
   message: {
     success: false,
     message: 'Too many requests from this IP address, please try again in 15 minutes.'
@@ -23,12 +25,13 @@ const globalApiLimiter = rateLimit({
 // 3. Stricter Auth Rate Limiter (Blocks Brute-force Password Attacks and Credential Stuffing)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Max 20 login/register attempts per 15 minutes per IP
+  max: 60, // Max 60 login/register attempts per 15 minutes per IP
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS', // Never block CORS preflight checks
   message: {
     success: false,
-    message: 'Too many login attempts detected from this IP. Account temporarily protected. Please try again after 15 minutes.'
+    message: 'Too many attempts detected. Please try again after 15 minutes.'
   }
 });
 
